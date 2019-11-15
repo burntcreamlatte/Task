@@ -11,7 +11,6 @@ import CoreData
 
 class TaskListTableViewController: UITableViewController, ButtonTableViewCellDelegate{
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,7 +20,7 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
 
     // MARK: - Table view data source
 
-    //do not need numberOfSections(in:) in this app, defaults to 1 and that is what we are using currently
+    //do not need numberOfSections(in:) normally with single section apps, here we are having an Incomplete and Complete section
     override func numberOfSections(in tableView: UITableView) -> Int {
         return TaskController.sharedInstance.fetchedResultsController.sections?.count ?? 0
 
@@ -58,12 +57,17 @@ class TaskListTableViewController: UITableViewController, ButtonTableViewCellDel
         }
     }
     
+    
+    // MARK: - Delegate Method
+    
     func buttonCellButtonTapped(_ sender: ButtonTableViewCell) {
         guard let indexPath = tableView.indexPath(for: sender) else { return }
         let task = TaskController.sharedInstance.fetchedResultsController.object(at: indexPath)
         TaskController.sharedInstance.toggleIsCompletedFor(task: task)
         sender.update(withTask: task)
     }
+    
+    
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -11,12 +11,13 @@ import CoreData
 
 class TaskController {
     
+    //singleton method for TaskController class; passing methods through globally
     static let sharedInstance = TaskController()
     
-   
+    //creating frc under NSFRC to fetch Task as result type; SoT
     let fetchedResultsController: NSFetchedResultsController<Task>
     
-
+    //frc init
     init() {
         
         //create Task request FRC uses
@@ -38,6 +39,9 @@ class TaskController {
             print(error, error.localizedDescription)
         }
     }
+    
+    
+    // MARK: - CRUD Functions
     //POTENTIAL OPTIONAL
     func addNew(taskWithName name: String, notes: String?, due: Date?) {
         _ = Task(name: name, notes: notes, due: due)
@@ -55,12 +59,14 @@ class TaskController {
         saveToPersistentStore()
     }
     
-    //TODO
     func toggleIsCompletedFor(task: Task) {
-        //TODO
+        //toggling isComplete boolean per task passed through
         task.isComplete = !task.isComplete
         saveToPersistentStore()
     }
+    
+    
+    // MARK: Persistence Methods
     
     func saveToPersistentStore() {
         let moc = CoreDataStack.context

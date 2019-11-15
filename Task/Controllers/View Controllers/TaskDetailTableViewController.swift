@@ -12,6 +12,7 @@ class TaskDetailTableViewController: UITableViewController {
     
     
     // MARK: - Properties
+    
     var task: Task? {
         //didSet observer to ensure the view updates WITH the updated values
         didSet {
@@ -37,6 +38,9 @@ class TaskDetailTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         updateViews()
     }
+    
+    
+    // MARK: - Actions
     
     @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
         updateTask()
@@ -74,7 +78,7 @@ class TaskDetailTableViewController: UITableViewController {
         //putting popVC here to guard against failed save/nil values
         navigationController?.popViewController(animated: true)
     }
-    //TODO = implement to update all view elements and reflect details of MO(name/duedate/notes
+    
     private func updateViews() {
         loadViewIfNeeded()
         //set title of the view to the name of the task if present

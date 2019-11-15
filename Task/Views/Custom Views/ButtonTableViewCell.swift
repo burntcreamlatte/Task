@@ -19,15 +19,14 @@ class ButtonTableViewCell: UITableViewCell {
     
     var delegate: ButtonTableViewCellDelegate?
     
+    
+    // MARK: - Outlets
+    
     @IBOutlet weak var primaryLabel: UILabel!
     @IBOutlet weak var completeButton: UIButton!
     
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-    }
-    
+    // MARK: - Actions
     
     @IBAction func buttonTapped(_ sender: Any) {
         //tell the delegate to perform function; logic outside of custom view, all logic for protocols/delegates done in controllers
@@ -35,14 +34,15 @@ class ButtonTableViewCell: UITableViewCell {
         delegate?.buttonCellButtonTapped(self)
     }
     
+    
+    //func to update button image; swap between complete and incomplete depending on isComplete bool
     func updateButton(_ isComplete: Bool) {
         //change image
-        let imageName = isComplete ? "complete":"incomplete"
+        let imageName = isComplete ? "complete" : "incomplete"
         //converting from string to UIImage here
         let image = UIImage(named: imageName)
         completeButton.setImage(image, for: .normal)
     }
-
 }
 //extension for updating button to populate specific task
 extension ButtonTableViewCell {

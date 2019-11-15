@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 
+//core data stack for MOC(context)
 class CoreDataStack {
     
     static let container: NSPersistentContainer = {
