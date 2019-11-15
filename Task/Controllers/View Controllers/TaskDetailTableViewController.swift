@@ -9,82 +9,81 @@
 import UIKit
 
 class TaskDetailTableViewController: UITableViewController {
+    
+    
+    // MARK: - Properties
+    var task: Task? {
+        //didSet observer to ensure the view updates WITH the updated values
+        didSet {
+            updateViews()
+        }
+    }
+    var dueDateValue: Date? //update enable?
+    
+    @IBOutlet weak var taskNameTextField: UITextField!
+    @IBOutlet weak var taskNotesTextField: UITextField!
+    @IBOutlet weak var dueDateTextField: UITextField!
+    @IBOutlet var dueDatePicker: UIDatePicker!
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        dueDateTextField.inputView = dueDatePicker
+        //updateviews after assigning the date picker view?
+        updateViews()
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateViews()
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+    
+    @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
+        updateTask()
+        
     }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    @IBAction func datePickerValueChanged(_ sender: UIDatePicker) {
+        //almost forgot to assign the sender as a UIDatePicker can't call date property of the sender if it comes as in from Any
+        self.dueDateTextField.text =  sender.date.stringValue()
+        self.dueDateValue = sender.date
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    @IBAction func userTappedView(_ sender: UITapGestureRecognizer) {
+        taskNameTextField.resignFirstResponder()
+        taskNotesTextField.resignFirstResponder()
+        dueDateTextField.resignFirstResponder()
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    
+    
+    // MARK: - Private Class Methods
+    private func updateTask() {
+        guard let name = taskNameTextField.text, name.isEmpty == false,
+            let notes = taskNotesTextField.text
+            else { return }
+        //due is an optional, not required to be able to save a task, not necessary to guard against it being empty
+        let due = dueDateValue
+        if let task = self.task {
+            TaskController.sharedInstance.updateTask(task: task, name: name, notes: notes, due: due)
+        } else {
+            TaskController.sharedInstance.addNew(taskWithName: name, notes: notes, due: due)
+        }
+        //putting popVC here to guard against failed save/nil values
+        navigationController?.popViewController(animated: true)
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    //TODO = implement to update all view elements and reflect details of MO(name/duedate/notes
+    private func updateViews() {
+        loadViewIfNeeded()
+        //set title of the view to the name of the task if present
+        title = task?.name
+        taskNameTextField.text = task?.name
+        //TODO need to unwrap??? this seems off
+        dueDateTextField.text = (task?.due as Date?)?.stringValue()
+        taskNotesTextField.text = task?.notes
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }
+

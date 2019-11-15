@@ -50,7 +50,7 @@
                                 <connections>
                                     <outlet property="completeButton" destination="VUG-ob-SZT" id="CRS-ka-Hvl"/>
                                     <outlet property="primaryLabel" destination="jYL-xa-rbg" id="LfZ-3M-eK2"/>
-                                    <segue destination="MEg-5R-DLu" kind="show" id="ql2-9C-anA"/>
+                                    <segue destination="MEg-5R-DLu" kind="show" identifier="toTaskDetailTVC" id="ql2-9C-anA"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

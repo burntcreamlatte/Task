@@ -6,19 +6,49 @@
 //  Copyright © 2019 Aaron Shackelford. All rights reserved.
 //
 
+//protocol
+protocol ButtonTableViewCellDelegate {
+    func buttonCellButtonTapped(_ sender: ButtonTableViewCell)
+}
+
 import UIKit
 
 class ButtonTableViewCell: UITableViewCell {
 
+    // MARK: - Properties
+    
+    var delegate: ButtonTableViewCellDelegate?
+    
+    @IBOutlet weak var primaryLabel: UILabel!
+    @IBOutlet weak var completeButton: UIButton!
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        
+    }
+    
+    
+    @IBAction func buttonTapped(_ sender: Any) {
+        //tell the delegate to perform function; logic outside of custom view, all logic for protocols/delegates done in controllers
+        print("check button tapped")
+        delegate?.buttonCellButtonTapped(self)
+    }
+    
+    func updateButton(_ isComplete: Bool) {
+        //change image
+        let imageName = isComplete ? "complete":"incomplete"
+        //converting from string to UIImage here
+        let image = UIImage(named: imageName)
+        completeButton.setImage(image, for: .normal)
     }
 
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+}
+//extension for updating button to populate specific task
+extension ButtonTableViewCell {
+    
+    func update(withTask task: Task) {
+        primaryLabel.text = task.name
+        updateButton(task.isComplete)
     }
-
 }
